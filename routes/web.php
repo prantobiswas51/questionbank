@@ -11,9 +11,13 @@ Route::get('/stories', [WordController::class, 'stories'])->name('stories');
 Route::get('/part-a', [WordController::class, 'part_a'])->name('part_a');
 Route::get('/part-b', [WordController::class, 'part_b'])->name('part_b');
 Route::get('/part-c', [WordController::class, 'part_c'])->name('part_c');
+Route::get('/summaries', [WordController::class, 'summaries'])->name('summaries');
 
 // single question view route
 Route::get('/parta/{id}', [WordController::class, 'parta_show'])->name('parta.show');
+Route::get('/partb/{id}', [WordController::class, 'partb_show'])->name('partb.show');
+Route::get('/partc/{id}', [WordController::class, 'partc_show'])->name('partc.show');
+Route::get('/summaries/{id}', [WordController::class, 'summaries_show'])->name('summaries.show');
 
 Route::post('/save_word', [WordController::class, 'save_word'])->name('save_word');
 

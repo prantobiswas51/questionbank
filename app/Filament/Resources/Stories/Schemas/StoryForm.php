@@ -15,6 +15,9 @@ class StoryForm
                 Select::make('paper_id')->options(function () {
                     return \App\Models\Paper::all()->pluck('paper_name', 'id');
                 })->required(),
+                Select::make('author_id')->options(function () {
+                    return \App\Models\Author::all()->pluck('name', 'id');
+                })->required(),
                 TextInput::make('story_name')
                     ->required(),
                 Select::make('story_type')

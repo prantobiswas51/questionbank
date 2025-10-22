@@ -21,6 +21,6 @@ class PartaForm
                 RichEditor::make('part_a_ans')->label('Part A Answer')
                     ->required(),
                 RichEditor::make('part_a_note')->label('Part A Note')
-            ]);
+            ])->columns(1);
     }
 }

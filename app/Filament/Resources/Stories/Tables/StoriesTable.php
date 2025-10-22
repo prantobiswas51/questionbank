@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Stories\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
@@ -18,6 +19,8 @@ class StoriesTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('story_name')
+                    ->searchable(),
+                TextColumn::make('author.name')
                     ->searchable(),
                 TextColumn::make('story_type')
                     ->badge(),
@@ -35,6 +38,7 @@ class StoriesTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

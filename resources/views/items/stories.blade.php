@@ -10,9 +10,9 @@
             <div
                 class="bg-white border rounded-lg shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 ease-in-out">
                 <div>
-                    <div class="flex justify-between">
+                    <div class="flex flex-col items-start">
                         <p class="text-xl font-bold text-gray-900 mb-1">{{ $story->story_name }}</p>
-                        <p class="text-lg text-gray-700 ">Paper : {{ $story->paper->paper_name }}</p>
+                        <p class="text-sm text-gray-700 ">Paper : {{ $story->paper->paper_name }}</p>
                     </div>
                 </div>
             </div>

@@ -18,8 +18,8 @@ class SummaryForm
                     return \App\Models\Story::all()->pluck('story_name', 'id');
                 })->required(),
 
-                RichEditor::make('summary_content')
+                RichEditor::make('summary_content')->label('Summary Content')
                     ->required(),
-            ]);
+            ])->columns(1);
     }
 }

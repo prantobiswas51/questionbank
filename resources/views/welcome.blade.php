@@ -56,7 +56,7 @@
         <a href="{{ route('part_a') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Part A ({{ $parta }})</a>
         <a href="{{ route('part_b') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Part B ({{ $partb }})</a>
         <a href="{{ route('part_c') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Part C ({{ $partc }})</a>
-        <a href="{{ route('part_c') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Summaries</a>
+        <a href="{{ route('summaries') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Summaries ({{ $summaries }})</a>
     </div>
 
 
@@ -85,7 +85,7 @@
     </div>
 
     {{-- Show the words --}}
-    <div class="px-4 mx-auto max-w-6xl bg-amber-400/50 p-2">
+    <div class="px-4 mx-auto max-w-6xl p-2">
         {{-- Check if there are words to display --}}
         @if ($words->isEmpty())
         <div class="bg-white rounded-lg shadow p-6 text-center text-gray-600">
@@ -97,7 +97,7 @@
             {{-- Loop through your words from the database --}}
             @foreach ($words as $word)
             <div
-                class="bg-white rounded-lg shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 ease-in-out">
+                class="bg-white rounded-lg border shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 ease-in-out">
                 <div>
                     <div class="flex justify-between">
                         <p class="text-xl font-bold text-gray-900 mb-1">{{ $word->english_word }}</p>

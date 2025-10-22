@@ -8,6 +8,7 @@ class Story extends Model
 {
      protected $fillable = [
         'paper_id',
+        'author_id',
         'story_name',
         'story_type',        
     ];
@@ -15,5 +16,10 @@ class Story extends Model
     public function paper()
     {
         return $this->belongsTo(Paper::class);
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
     }
 }

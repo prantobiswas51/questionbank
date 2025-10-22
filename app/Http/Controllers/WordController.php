@@ -26,7 +26,7 @@ class WordController extends Controller
         $partb = Partb::all()->count();
         $partc = Partc::all()->count();
 
-        return view('welcome', compact('words', 'subjects', 'papers', 'summaries', 'stories', 'parta', 'partb', 'partc'));
+        return view('welcome', compact('words', 'subjects', 'papers', 'summaries', 'stories', 'parta', 'partb', 'partc' ));
     }
 
     public function subjects()
@@ -69,10 +69,28 @@ class WordController extends Controller
         return view('items.single.single_parta', compact('question'));
     }
 
+    public function partb_show($id)
+    {
+        $question = Partb::findOrFail($id);
+        return view('items.single.single_partb', compact('question'));
+    }
+
+    public function partc_show($id)
+    {
+        $question = Partc::findOrFail($id);
+        return view('items.single.single_partc', compact('question'));
+    }
+
     public function summaries()
     {
         $summaries = Summary::all();
         return view('items.summaries', compact('summaries'));
+    }
+
+    public function summaries_show($id)
+    {
+        $summary = Summary::findOrFail($id);
+        return view('items.single.single_summary', compact('summary'));
     }
 
     public function save_word(Request $request)

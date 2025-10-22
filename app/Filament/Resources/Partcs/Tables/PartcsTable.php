@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Partcs\Tables;
 
+use Filament\Tables\Table;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 
 class PartcsTable
 {
@@ -14,14 +16,10 @@ class PartcsTable
     {
         return $table
             ->columns([
-                TextColumn::make('story_id')
+                TextColumn::make('story.story_name')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('part_c_qs')
-                    ->searchable(),
-                TextColumn::make('part_c_ans')
-                    ->searchable(),
-                TextColumn::make('part_c_note')
+                TextColumn::make('part_c_qs')->label('Part C Question')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -36,7 +34,9 @@ class PartcsTable
                 //
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
