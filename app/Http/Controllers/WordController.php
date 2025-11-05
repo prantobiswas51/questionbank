@@ -10,14 +10,27 @@ use App\Models\Partc;
 use App\Models\Story;
 use App\Models\Subject;
 use App\Models\Summary;
+use App\Models\User;
+use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
 
 class WordController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $words = Word::all();
+        // Start building the query for words
+        $wordsQuery = Word::query();
 
+        // Check if a search term 'q' is present in the request
+        if ($request->filled('q')) {
+            $searchTerm = $request->q;
+            $wordsQuery->where('english_word', 'like', '%' . $searchTerm . '%');
+        }
+
+        // Execute the query to get the filtered/unfiltered list of words
+        $words = $wordsQuery->get();
+
+        // Retrieve counts for other models
         $subjects = Subject::all()->count();
         $papers = Paper::all()->count();
         $summaries = Summary::all()->count();
@@ -26,12 +39,25 @@ class WordController extends Controller
         $partb = Partb::all()->count();
         $partc = Partc::all()->count();
 
-        return view('welcome', compact('words', 'subjects', 'papers', 'summaries', 'stories', 'parta', 'partb', 'partc' ));
+        return view('welcome', compact(
+            'words',
+            'subjects',
+            'papers',
+            'summaries',
+            'stories',
+            'parta',
+            'partb',
+            'partc'
+        ));
     }
 
     public function subjects()
     {
+
         $subjects = Subject::all();
+
+
+
         return view('items.subjects', compact('subjects'));
     }
 
@@ -47,19 +73,51 @@ class WordController extends Controller
         return view('items.stories', compact('stories'));
     }
 
-    public function part_a()
+    public function part_a(Request $request)
     {
-        $parta = Parta::all();
+        $query = PartA::with('story'); // include story relationship
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('part_a_qs', 'like', "%{$search}%")
+                ->orWhereHas('story', function ($q) use ($search) {
+                    $q->where('story_name', 'like', "%{$search}%");
+                });
+        }
+        $parta = $query->get();
+
         return view('items.part_a', compact('parta'));
     }
-    public function part_b()
+    public function part_b(Request $request)
     {
-        $partb = Partb::all();
+        $query = PartB::with('story'); // include story relationship
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('part_b_qs', 'like', "%{$search}%")
+                ->orWhereHas('story', function ($q) use ($search) {
+                    $q->where('story_name', 'like', "%{$search}%");
+                });
+        }
+
+        $partb = $query->get();
+
         return view('items.part_b', compact('partb'));
     }
-    public function part_c()
+    public function part_c(Request $request)
     {
-        $partc = Partc::all();
+        $query = PartC::with('story'); // include story relationship
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('part_c_qs', 'like', "%{$search}%")
+                ->orWhereHas('story', function ($q) use ($search) {
+                    $q->where('story_name', 'like', "%{$search}%");
+                });
+        }
+
+        $partc = $query->get();
+
         return view('items.part_c', compact('partc'));
     }
 
@@ -96,6 +154,16 @@ class WordController extends Controller
     public function save_word(Request $request)
     {
         $word = new Word();
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            Notification::make()
+                ->title('Subjects Loaded')
+                ->body('All subjects have been successfully loaded.')
+                ->success()
+                ->send();                 // optional: also show real-time notification
+        }
 
         // Assign values from the request
         $word->english_word = $request->input('main_word');

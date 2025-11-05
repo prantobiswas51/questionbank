@@ -47,9 +47,9 @@
         </div>
     </div>
 
-    <h3 class="text-lg font-semibold p-2">Explore ... </h3>
+    <h3 class="text-lg font-semibold max-w-6xl p-2 mx-auto">Explore ... </h3>
 
-    <div class=" p-2 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+    <div class=" max-w-6xl mx-auto p-2 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         <a href="{{ route('subjects') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Subjects ({{ $subjects }})</a>
         <a href="{{ route('papers') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Papers ({{ $papers }})</a>
         <a href="{{ route('stories') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Stories ({{ $stories }})</a>
@@ -64,7 +64,7 @@
     <div
         class="flex  p-2 flex-col sm:flex-row items-stretch sm:items-center justify-between py-4 px-4 mx-auto max-w-6xl gap-3">
 
-        <form action="" method="get" class="flex items-center space-x-2 w-full sm:w-auto flex-grow">
+        <form action="{{ route('home') }}" method="get" class="flex items-center space-x-2 w-full sm:w-auto flex-grow">
             <input type="search" id="search-words" name="q" placeholder="Search words..." value="{{ request('q') }}"
                 class="px-4 py-2 border border-gray-300 shadow-sm w-full rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition duration-200 ease-in-out"
                 aria-label="Search for words">
@@ -116,11 +116,12 @@
             </div>
             @endforeach
         </div>
+        
+        @endif
         {{-- Pagination links if you have them --}}
         {{-- <div class="mt-6">
             {{ $words->links() }}
         </div> --}}
-        @endif
     </div>
 
 

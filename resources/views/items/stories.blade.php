@@ -13,6 +13,7 @@
                     <div class="flex flex-col items-start">
                         <p class="text-xl font-bold text-gray-900 mb-1">{{ $story->story_name }}</p>
                         <p class="text-sm text-gray-700 ">Paper : {{ $story->paper->paper_name }}</p>
+                        <p class="text-sm text-green-700 bg-green-100/50 p-2 rounded-[50px] ">Author : {{ $story->author->name }}</p>
                     </div>
                 </div>
             </div>

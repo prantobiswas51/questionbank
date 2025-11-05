@@ -15,6 +15,7 @@
                             <p class="text-xl font-bold text-gray-900 mb-1">{{ $summary->story->story_name }}</p>
                             <p class="text-lg text-gray-700 ">{{ $summary->story->year_id }}</p>
                         </div>
+                        <p class="text-sm text-green-700 bg-green-100/50 p-2 rounded-[50px]"> Story : {{  $summary->story->author->name }} </p>
                     </div>
                 </div>
             </a>

@@ -14,6 +14,7 @@
                     <div class="flex justify-between">
                         <p class="text-xl font-bold text-gray-900 mb-1">{{ $question->id }} . {{ $question->part_a_qs }}</p>
                     </div>
+                    <p class="text-sm text-green-700 bg-green-100/50 p-2 rounded-[50px]"> Story : {{  $question->story->story_name }} </p>
                 </div>
             </div>
             </a>
