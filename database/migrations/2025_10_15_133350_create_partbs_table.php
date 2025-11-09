@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('partbs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('story_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('part_b_qs');
+            $table->text('part_b_qs');
             $table->longText('part_b_ans');
             $table->text('part_b_note')->nullable();
             $table->timestamps();
