@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\Partas\Schemas;
 
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\RichEditor;
 use Filament\Schemas\Schema;
 
 class PartaForm
@@ -13,14 +14,29 @@ class PartaForm
     {
         return $schema
             ->components([
-                Select::make('story_id')->options(function () {
-                    return \App\Models\Story::all()->pluck('story_name', 'id');
-                })->label('Story')->required(),
-                TextInput::make('part_a_qs')->label('Part A Question')
+                Select::make('story_id')
+                    ->label('Story')
+                    ->options(\App\Models\Story::pluck('story_name', 'id'))
                     ->required(),
-                RichEditor::make('part_a_ans')->label('Part A Answer')
-                    ->required(),
-                RichEditor::make('part_a_note')->label('Part A Note')
-            ])->columns(1);
+
+                Repeater::make('questions')
+                    ->label('Part A Questions')
+                    ->schema([
+                        TextInput::make('part_a_qs')
+                            ->label('Question'),
+
+                        RichEditor::make('part_a_ans')
+                            ->label('Answer'),
+
+                        RichEditor::make('part_a_note')
+                            ->label('Note'),
+                    ])
+                    ->defaultItems(2)         // show 3 items initially :contentReference[oaicite:2]{index=2}
+                    ->minItems(0)             // allow 0 filled (so you can ignore empty) 
+                    ->maxItems(10)
+                    ->addActionLabel('Add Another Question')
+                    ->columns(1),
+            ])
+            ->columns(1);
     }
 }

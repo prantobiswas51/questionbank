@@ -17,7 +17,11 @@ Route::get('/summaries', [WordController::class, 'summaries'])->name('summaries'
 Route::get('/parta/{id}', [WordController::class, 'parta_show'])->name('parta.show');
 Route::get('/partb/{id}', [WordController::class, 'partb_show'])->name('partb.show');
 Route::get('/partc/{id}', [WordController::class, 'partc_show'])->name('partc.show');
+Route::get('/paper/{id}', [WordController::class, 'paper_show'])->name('paper.show');
 Route::get('/summaries/{id}', [WordController::class, 'summaries_show'])->name('summaries.show');
+
+//filterd rouutes
+// Route::get('/papers/stories', [WordController::class, 'papers'])->name('papers');
 
 Route::post('/save_word', [WordController::class, 'save_word'])->name('save_word');
 

@@ -3,13 +3,32 @@
         <h1 class="text-2xl font-bold mb-4">Part B Questions</h1>
 
         <div class="search_box py-2 mb-4 ">
-            <form action="{{ route('part_b') }}" method="get">
+            <form action="{{ route('part_b') }}" method="get" class="flex flex-wrap gap-2 items-center">
                 <input type="text" name="search" class="rounded-lg border sm:min-w-[300px] border-gray-300"
                     placeholder="Search Part B Questions" value="{{ request('search') }}">
 
-                <button type="submit" class="border p-2 rounded-lg">Search</button>
-                <a href="{{ route('part_b') }}"><button type="button" class="border p-2 rounded-lg">Clear</button></a>
+                <select class="rounded-md border-gray-300" name="paper_id" id="paper_id">
+                    <option value="">Select Paper</option>
+                    @foreach($papers as $paper)
+                    <option value="{{ $paper->id }}" {{ request('paper_id')==$paper->id ? 'selected' : '' }}>
+                        {{ $paper->paper_name }}
+                    </option>
+                    @endforeach
+                </select>
+
+                <select class="rounded-md border-gray-300" name="story_id" id="story_id">
+                    <option value="">Select Story</option>
+                    @foreach($stories as $story)
+                    <option value="{{ $story->id }}" {{ request('story_id')==$story->id ? 'selected' : '' }}>
+                        {{ $story->story_name }}
+                    </option>
+                    @endforeach
+                </select>
+
+                <button type="submit" class="border p-2 rounded-lg bg-blue-500 text-white">Search</button>
+                <a href="{{ route('part_b') }}" class="border p-2 rounded-lg bg-red-500 text-white">Clear</a>
             </form>
+
         </div>
 
         @if ($partb->isEmpty())

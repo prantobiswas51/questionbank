@@ -11,7 +11,7 @@
                 class="bg-white border rounded-lg shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 ease-in-out">
                 <div>
                     <div class="flex justify-between">
-                        <p class="text-xl font-bold text-gray-900 mb-1">{{ $paper->paper_name }}</p>
+                        <a class="underline" href="{{ route('paper.show', $paper->id) }}"><p class="text-xl font-bold text-gray-900 mb-1">{{ $paper->paper_name }}</p></a>
                         <p class="text-lg text-gray-700 ">{{ $paper->subject->subject_name }}</p>
                     </div>
                 </div>

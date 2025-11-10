@@ -75,51 +75,107 @@ class WordController extends Controller
 
     public function part_a(Request $request)
     {
-        $query = PartA::with('story'); // include story relationship
+        $query = Parta::with('story.paper'); // load story + paper relationships
 
-        if ($request->has('search') && !empty($request->search)) {
+        // 🔍 Search by question or story name
+        if ($request->filled('search')) {
             $search = $request->search;
-            $query->where('part_a_qs', 'like', "%{$search}%")
-                ->orWhereHas('story', function ($q) use ($search) {
-                    $q->where('story_name', 'like', "%{$search}%");
-                });
+            $query->where(function ($q) use ($search) {
+                $q->where('part_a_qs', 'like', "%{$search}%")
+                    ->orWhereHas('story', function ($sub) use ($search) {
+                        $sub->where('story_name', 'like', "%{$search}%");
+                    });
+            });
         }
+
+        // 📘 Filter by Paper (through Story)
+        if ($request->filled('paper_id')) {
+            $query->whereHas('story', function ($q) use ($request) {
+                $q->where('paper_id', $request->paper_id);
+            });
+        }
+
+        // 📖 Filter by Story
+        if ($request->filled('story_id')) {
+            $query->where('story_id', $request->story_id);
+        }
+
+        $papers = Paper::all();
+        $stories = Story::all();
         $parta = $query->get();
 
-        return view('items.part_a', compact('parta'));
+        return view('items.part_a', compact('parta', 'papers', 'stories'));
     }
+
     public function part_b(Request $request)
     {
-        $query = PartB::with('story'); // include story relationship
+        $query = Partb::with('story.paper'); // load story + paper relationships
 
-        if ($request->has('search') && !empty($request->search)) {
+        // 🔍 Search by question or story name
+        if ($request->filled('search')) {
             $search = $request->search;
-            $query->where('part_b_qs', 'like', "%{$search}%")
-                ->orWhereHas('story', function ($q) use ($search) {
-                    $q->where('story_name', 'like', "%{$search}%");
-                });
+            $query->where(function ($q) use ($search) {
+                $q->where('part_b_qs', 'like', "%{$search}%")
+                    ->orWhereHas('story', function ($sub) use ($search) {
+                        $sub->where('story_name', 'like', "%{$search}%");
+                    });
+            });
         }
 
+        // 📘 Filter by Paper (through Story)
+        if ($request->filled('paper_id')) {
+            $query->whereHas('story', function ($q) use ($request) {
+                $q->where('paper_id', $request->paper_id);
+            });
+        }
+
+        // 📖 Filter by Story
+        if ($request->filled('story_id')) {
+            $query->where('story_id', $request->story_id);
+        }
+
+        $papers = Paper::all();
+        $stories = Story::all();
         $partb = $query->get();
 
-        return view('items.part_b', compact('partb'));
+        return view('items.part_b', compact('partb', 'papers', 'stories'));
     }
+
+
     public function part_c(Request $request)
     {
-        $query = PartC::with('story'); // include story relationship
+        $query = Partc::with('story.paper'); // load story + paper relationships
 
-        if ($request->has('search') && !empty($request->search)) {
+        // 🔍 Search by question or story name
+        if ($request->filled('search')) {
             $search = $request->search;
-            $query->where('part_c_qs', 'like', "%{$search}%")
-                ->orWhereHas('story', function ($q) use ($search) {
-                    $q->where('story_name', 'like', "%{$search}%");
-                });
+            $query->where(function ($q) use ($search) {
+                $q->where('part_c_qs', 'like', "%{$search}%")
+                    ->orWhereHas('story', function ($sub) use ($search) {
+                        $sub->where('story_name', 'like', "%{$search}%");
+                    });
+            });
         }
 
+        // 📘 Filter by Paper (through Story)
+        if ($request->filled('paper_id')) {
+            $query->whereHas('story', function ($q) use ($request) {
+                $q->where('paper_id', $request->paper_id);
+            });
+        }
+
+        // 📖 Filter by Story
+        if ($request->filled('story_id')) {
+            $query->where('story_id', $request->story_id);
+        }
+
+        $papers = Paper::all();
+        $stories = Story::all();
         $partc = $query->get();
 
-        return view('items.part_c', compact('partc'));
+        return view('items.part_c', compact('partc', 'papers', 'stories'));
     }
+
 
     public function parta_show($id)
     {
@@ -137,6 +193,14 @@ class WordController extends Controller
     {
         $question = Partc::findOrFail($id);
         return view('items.single.single_partc', compact('question'));
+    }
+
+
+    public function paper_show($id)
+    {
+        $paper = Paper::findOrFail($id);
+        $stories = Story::where('paper_id', $paper->id)->get();
+        return view('items.single.single_paper', compact('paper', 'stories'));
     }
 
     public function summaries()
