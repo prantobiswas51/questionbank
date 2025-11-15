@@ -32,7 +32,7 @@ class PartaForm
                             ->label('Note'),
                     ])
                     ->defaultItems(2)         // show 3 items initially :contentReference[oaicite:2]{index=2}
-                    ->minItems(0)             // allow 0 filled (so you can ignore empty) 
+                    ->minItems(2)             // allow 0 filled (so you can ignore empty) 
                     ->maxItems(10)
                     ->addActionLabel('Add Another Question')
                     ->columns(1),

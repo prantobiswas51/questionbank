@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\Papers\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Forms\Components\Select;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\TextColumn;
 
 class PapersTable
 {
@@ -32,7 +33,8 @@ class PapersTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make(), 
+                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
