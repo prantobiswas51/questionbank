@@ -17,9 +17,9 @@ class PapersTable
         return $table
             ->columns([
                 TextColumn::make('paper_name')
-                    ->searchable(),
+                    ->searchable()->sortable(),
                 TextColumn::make('paper_code')
-                    ->searchable(),
+                    ->searchable()->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

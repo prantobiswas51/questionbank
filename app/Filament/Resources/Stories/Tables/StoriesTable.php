@@ -19,9 +19,9 @@ class StoriesTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('story_name')
-                    ->searchable(),
+                    ->searchable()->sortable(),
                 TextColumn::make('author.name')
-                    ->searchable(),
+                    ->searchable()->sortable(),
                 TextColumn::make('story_type')
                     ->badge(),
                 TextColumn::make('created_at')
@@ -32,7 +32,7 @@ class StoriesTable
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->defaultSort('story_name', 'asc')
             ->filters([
                 //
             ])
