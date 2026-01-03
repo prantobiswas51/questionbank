@@ -1,5 +1,5 @@
 <x-filament-panels::page>
-    <div class="space-y-6">
+    <div class="">
         <script src="https://cdn.tailwindcss.com"></script>
         <div class="flex justify-end">
             <button onclick="openUploadModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold p-2 px-4 rounded-lg flex items-center transition-colors">

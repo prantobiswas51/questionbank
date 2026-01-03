@@ -17,6 +17,9 @@ class UsersTable
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('image_url')
+                    ->label('Image URL')
+                    ->searchable(),
                 TextColumn::make('subject')
                     ->searchable(),
                 TextColumn::make('email')
