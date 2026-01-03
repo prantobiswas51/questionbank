@@ -17,15 +17,7 @@ class UserForm
                     ->required(),
                 TextInput::make('subject'),
                 FileUpload::make('image_url')
-                    ->label('Image')
-                    ->image()
-                    ->disk('public')
-                    ->directory('media')
-                    ->visibility('public')
-                    ->imagePreviewHeight('150')
-                    ->panelAspectRatio('1:1')
-                    ->panelLayout('integrated')
-                    ->required(),
+                    ->label('Image'),
                 TextInput::make('email')
                     ->label('Email address')
                     ->email()
