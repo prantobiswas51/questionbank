@@ -4,7 +4,7 @@
         <div
             class="bg-white border rounded-lg shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 ease-in-out">
             <div>
-                <p class="text-xl font-bold text-gray-900 mb-1">{!! $summary->summary_content !!}</p>
+                <div class="text-gray-800 prose prose-sm max-w-none [&>p]:mb-4 [&>p]:leading-relaxed">{!! $summary->summary_content !!}</div>
             </div>
         </div>
     </div>

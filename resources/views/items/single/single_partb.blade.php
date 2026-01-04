@@ -9,7 +9,7 @@
                 
                 <div class="mt-4">
                     <h2 class="text-lg font-semibold text-gray-800 mb-2">Answer:</h2>
-                    <p class="text-gray-700">{!! $question->part_b_ans !!}</p>
+                    <div class="text-gray-800 prose prose-sm max-w-none [&>p]:mb-4 [&>p]:leading-relaxed">{!! $question->part_b_ans !!}</div>
                 </div>
             </div>
         </div>
