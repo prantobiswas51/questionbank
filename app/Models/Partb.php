@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\WordTranslationHelper;
 use Illuminate\Database\Eloquent\Model;
 
 class Partb extends Model
@@ -13,8 +14,21 @@ class Partb extends Model
         'part_b_note'
     ];
 
+    protected $appends = ['translated_answer'];
+
     public function story()
     {
         return $this->belongsTo(Story::class);
+    }
+
+    public function getTranslatedAnswerAttribute()
+    {
+        $words = Word::all();
+        
+        if ($words->isEmpty()) {
+            return $this->part_b_ans;
+        }
+
+        return WordTranslationHelper::wrapWordsWithTooltips($this->part_b_ans, $words);
     }
 }

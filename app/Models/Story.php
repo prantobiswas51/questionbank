@@ -22,4 +22,9 @@ class Story extends Model
     {
         return $this->belongsTo(Author::class);
     }
+
+    public function words()
+    {
+        return $this->hasMany(Word::class);
+    }
 }
