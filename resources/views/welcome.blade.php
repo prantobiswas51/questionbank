@@ -69,7 +69,8 @@
                         placeholder="e.g., ওহে">
                 </div>
                 <div>
-                    <label for="edit_notes" class="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
+                    <label for="edit_notes" class="block text-sm font-medium text-gray-700 mb-1">Notes
+                        (Optional)</label>
                     <textarea id="edit_notes" name="notes" rows="3"
                         class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         placeholder="Any additional context or examples..."></textarea>
@@ -85,8 +86,8 @@
                     </button>
                 </div>
             </form>
-            <button type="button" id="closeEditModalButton" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
-                aria-label="Close modal">
+            <button type="button" id="closeEditModalButton"
+                class="absolute top-3 right-3 text-gray-400 hover:text-gray-600" aria-label="Close modal">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                     </path>
@@ -98,13 +99,24 @@
     <h3 class="text-lg font-semibold max-w-6xl p-2 mx-auto">Explore ... </h3>
 
     <div class=" max-w-6xl mx-auto p-2 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-        <a href="{{ route('subjects') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Subjects ({{ $subjects }})</a>
-        <a href="{{ route('papers') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Papers ({{ $papers }})</a>
-        <a href="{{ route('stories') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Stories ({{ $stories }})</a>
-        <a href="{{ route('part_a') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Part A ({{ $parta }})</a>
-        <a href="{{ route('part_b') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Part B ({{ $partb }})</a>
-        <a href="{{ route('part_c') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Part C ({{ $partc }})</a>
-        <a href="{{ route('summaries') }}" class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Summaries ({{ $summaries }})</a>
+        <a href="{{ route('subjects') }}"
+            class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Subjects ({{ $subjects
+            }})</a>
+        <a href="{{ route('papers') }}"
+            class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Papers ({{ $papers
+            }})</a>
+        <a href="{{ route('stories') }}"
+            class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Stories ({{ $stories
+            }})</a>
+        <a href="{{ route('part_a') }}"
+            class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Part A ({{ $parta }})</a>
+        <a href="{{ route('part_b') }}"
+            class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Part B ({{ $partb }})</a>
+        <a href="{{ route('part_c') }}"
+            class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Part C ({{ $partc }})</a>
+        <a href="{{ route('summaries') }}"
+            class="p-2 px-4 text-center hover:cursor-pointer rounded-lg bg-sky-600 text-white">Summaries ({{ $summaries
+            }})</a>
     </div>
 
 
@@ -147,26 +159,25 @@
             <div
                 class="bg-white rounded-lg border shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 ease-in-out">
                 <div>
-                    <div class="flex justify-between">
-                        <p class="text-xl font-bold text-gray-900 mb-1">{{ $word->english_word }}</p>
-                        <p class="text-lg text-gray-700 ">{{ $word->meaning }}</p>
+                    <div class="flex items-center justify-between">
+                        <p class="text-xl font-bold text-gray-900">{{ $word->english_word }}</p>
+                        <button type="button"
+                            class="text-blue-500 hover:text-blue-700 bg-sky-200 p-1 px-3 rounded-lg text-sm font-medium edit-word-btn"
+                            data-word-id="{{ $word->id }}" data-word-english="{{ $word->english_word }}"
+                            data-word-meaning="{{ $word->meaning }}" data-word-notes="{{ $word->notes ?? '' }}"
+                            aria-label="Edit word {{ $word->english_word }}">Edit</button>
                     </div>
                     @if ($word->notes)
-                    <p class="text-sm text-gray-500 mt-2">{{ $word->notes }}</p>
+                    <p class="text-sm text-gray-500"><span class="font-bold">Note : </span>{{ $word->notes }}</p>
                     @endif
                 </div>
-                <div class="mt-4 flex justify-end space-x-2">
-                    <button type="button" class="text-blue-500 hover:text-blue-700 text-sm font-medium edit-word-btn"
-                        data-word-id="{{ $word->id }}"
-                        data-word-english="{{ $word->english_word }}"
-                        data-word-meaning="{{ $word->meaning }}"
-                        data-word-notes="{{ $word->notes ?? '' }}"
-                        aria-label="Edit word {{ $word->english_word }}">Edit</button>
+                <div class=" flex justify-end space-x-2">
+                    <p class="text-md text-gray-700 ">{{ $word->meaning }}</p>
                 </div>
             </div>
             @endforeach
         </div>
-        
+
         @endif
         {{-- Pagination links if you have them --}}
         {{-- <div class="mt-6">
