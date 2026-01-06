@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('words', function (Blueprint $table) {
             $table->id();
             $table->foreignId('story_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('english_word');
+            $table->string('english_word')->unique();
             $table->string('meaning');
             $table->text('notes')->nullable();
             $table->timestamps();

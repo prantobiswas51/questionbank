@@ -217,24 +217,60 @@ class WordController extends Controller
 
     public function save_word(Request $request)
     {
+        $mainWord = $request->input('main_word');
+
+        // Check if word already exists
+        if (Word::where('english_word', $mainWord)->exists()) {
+            return redirect()->route('home')->with('error', 'This word already exists in the database!');
+        }
+
         $word = new Word();
 
         $admins = User::where('role', 'admin')->get();
 
         foreach ($admins as $admin) {
             Notification::make()
-                ->title('Subjects Loaded')
-                ->body('All subjects have been successfully loaded.')
+                ->title('Word Added')
+                ->body('A new word has been successfully added: ' . $mainWord)
                 ->success()
-                ->send();                 // optional: also show real-time notification
+                ->send();
         }
 
         // Assign values from the request
-        $word->english_word = $request->input('main_word');
+        $word->english_word = $mainWord;
         $word->meaning = $request->input('translate_word');
         $word->notes = $request->input('notes');
         $word->save();
 
         return redirect()->route('home')->with('success', 'Word added successfully!');
+    }
+
+    public function update_word(Request $request, $id)
+    {
+        $word = Word::findOrFail($id);
+        $mainWord = $request->input('main_word');
+
+        // Check if another word with the same name exists (but not the current word)
+        if (Word::where('english_word', $mainWord)->where('id', '!=', $id)->exists()) {
+            return redirect()->route('home')->with('error', 'This word already exists in the database!');
+        }
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            Notification::make()
+                ->title('Word Updated')
+                ->body('The word "' . $mainWord . '" has been successfully updated.')
+                ->success()
+                ->send();
+        }
+
+        // Update values
+        $word->english_word = $mainWord;
+        $word->meaning = $request->input('translate_word');
+        $word->notes = $request->input('notes');
+        $word->save();
+
+        return redirect()->route('home')->with('success', 'Word updated successfully!');
     }
 }

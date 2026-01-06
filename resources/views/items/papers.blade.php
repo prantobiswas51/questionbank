@@ -15,12 +15,7 @@
                         <p class="text-lg text-gray-700 ">{{ $paper->subject->subject_name }}</p>
                     </div>
                 </div>
-                <div class="mt-4 flex justify-end space-x-2">
-                    <button class="text-blue-500 hover:text-blue-700 text-sm font-medium"
-                        aria-label="Edit paper {{ $paper->paper_name }}">Edit</button>
-                    <button class="text-red-500 hover:text-red-700 text-sm font-medium"
-                        aria-label="Delete paper {{ $paper->paper_name }}">Delete</button>
-                </div>
+                
             </div>
             @endforeach
         </div>

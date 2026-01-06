@@ -25,6 +25,7 @@ Route::get('/summaries/{id}', [WordController::class, 'summaries_show'])->name('
 // Route::get('/papers/stories', [WordController::class, 'papers'])->name('papers');
 
 Route::post('/save_word', [WordController::class, 'save_word'])->name('save_word');
+Route::put('/words/{id}', [WordController::class, 'update_word'])->name('update_word');
 
 // Media routes
 Route::post('/media/delete-image', [MediaController::class, 'deleteImage'])->name('delete-image');

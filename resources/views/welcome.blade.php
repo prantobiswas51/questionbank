@@ -47,6 +47,54 @@
         </div>
     </div>
 
+    {{-- Edit Word Modal --}}
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden"
+        id="editWordModal">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm relative">
+            <h3 class="text-xl font-semibold mb-4 text-gray-800">Edit Word</h3>
+            <form id="editWordForm" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
+                <div>
+                    <label for="edit_main_word" class="block text-sm font-medium text-gray-700 mb-1">Main Word</label>
+                    <input type="text" id="edit_main_word" name="main_word" required
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="e.g., Hello">
+                </div>
+                <div>
+                    <label for="edit_translate_word" class="block text-sm font-medium text-gray-700 mb-1">Translated
+                        Word</label>
+                    <input type="text" id="edit_translate_word" name="translate_word" required
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="e.g., ওহে">
+                </div>
+                <div>
+                    <label for="edit_notes" class="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
+                    <textarea id="edit_notes" name="notes" rows="3"
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="Any additional context or examples..."></textarea>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" id="cancelEditWord"
+                        class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition duration-200 ease-in-out">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-200 ease-in-out">
+                        Update Word
+                    </button>
+                </div>
+            </form>
+            <button type="button" id="closeEditModalButton" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
+                aria-label="Close modal">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
     <h3 class="text-lg font-semibold max-w-6xl p-2 mx-auto">Explore ... </h3>
 
     <div class=" max-w-6xl mx-auto p-2 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -108,10 +156,12 @@
                     @endif
                 </div>
                 <div class="mt-4 flex justify-end space-x-2">
-                    <button class="text-blue-500 hover:text-blue-700 text-sm font-medium"
-                        aria-label="Edit word {{ $word->main_word }}">Edit</button>
-                    <button class="text-red-500 hover:text-red-700 text-sm font-medium"
-                        aria-label="Delete word {{ $word->main_word }}">Delete</button>
+                    <button type="button" class="text-blue-500 hover:text-blue-700 text-sm font-medium edit-word-btn"
+                        data-word-id="{{ $word->id }}"
+                        data-word-english="{{ $word->english_word }}"
+                        data-word-meaning="{{ $word->meaning }}"
+                        data-word-notes="{{ $word->notes ?? '' }}"
+                        aria-label="Edit word {{ $word->english_word }}">Edit</button>
                 </div>
             </div>
             @endforeach
@@ -127,34 +177,80 @@
 
     <script>
         const addWordModal = document.getElementById('addWordModal');
-            const openAddWordModalButton = document.getElementById('openAddWordModal');
-            const cancelAddWordButton = document.getElementById('cancelAddWord');
-            const closeModalButton = document.getElementById('closeModalButton'); // New close button
+        const editWordModal = document.getElementById('editWordModal');
+        const openAddWordModalButton = document.getElementById('openAddWordModal');
+        const cancelAddWordButton = document.getElementById('cancelAddWord');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const cancelEditWordButton = document.getElementById('cancelEditWord');
+        const closeEditModalButton = document.getElementById('closeEditModalButton');
+        const editWordForm = document.getElementById('editWordForm');
+        const editWordButtons = document.querySelectorAll('.edit-word-btn');
 
-            openAddWordModalButton.addEventListener('click', () => {
-                addWordModal.classList.remove('hidden');
-            });
+        // Add Word Modal handlers
+        openAddWordModalButton.addEventListener('click', () => {
+            addWordModal.classList.remove('hidden');
+        });
 
-            cancelAddWordButton.addEventListener('click', () => {
+        cancelAddWordButton.addEventListener('click', () => {
+            addWordModal.classList.add('hidden');
+        });
+
+        closeModalButton.addEventListener('click', () => {
+            addWordModal.classList.add('hidden');
+        });
+
+        addWordModal.addEventListener('click', (e) => {
+            if (e.target === addWordModal) {
                 addWordModal.classList.add('hidden');
-            });
+            }
+        });
 
-            closeModalButton.addEventListener('click', () => { // Event listener for the new close button
-                addWordModal.classList.add('hidden');
-            });
+        // Edit Word Modal handlers
+        editWordButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const wordId = this.getAttribute('data-word-id');
+                const wordEnglish = this.getAttribute('data-word-english');
+                const wordMeaning = this.getAttribute('data-word-meaning');
+                const wordNotes = this.getAttribute('data-word-notes');
 
-            // Close modal when clicking outside of it
-            addWordModal.addEventListener('click', (e) => {
-                if (e.target === addWordModal) {
+                // Populate the edit form
+                document.getElementById('edit_main_word').value = wordEnglish;
+                document.getElementById('edit_translate_word').value = wordMeaning;
+                document.getElementById('edit_notes').value = wordNotes;
+
+                // Set the form action to the update route
+                editWordForm.action = `/words/${wordId}`;
+                editWordForm.method = 'POST';
+
+                // Show the edit modal
+                editWordModal.classList.remove('hidden');
+            });
+        });
+
+        cancelEditWordButton.addEventListener('click', () => {
+            editWordModal.classList.add('hidden');
+        });
+
+        closeEditModalButton.addEventListener('click', () => {
+            editWordModal.classList.add('hidden');
+        });
+
+        editWordModal.addEventListener('click', (e) => {
+            if (e.target === editWordModal) {
+                editWordModal.classList.add('hidden');
+            }
+        });
+
+        // Close modals with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (!addWordModal.classList.contains('hidden')) {
                     addWordModal.classList.add('hidden');
                 }
-            });
-
-            // Optional: Close modal with Escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && !addWordModal.classList.contains('hidden')) {
-                    addWordModal.classList.add('hidden');
+                if (!editWordModal.classList.contains('hidden')) {
+                    editWordModal.classList.add('hidden');
                 }
-            });
+            }
+        });
     </script>
 </x-guest-layout>
