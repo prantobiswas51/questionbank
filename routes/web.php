@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\AiChatController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Request;
 use App\Http\Controllers\WordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MediaController;
@@ -30,6 +33,8 @@ Route::put('/words/{id}', [WordController::class, 'update_word'])->name('update_
 // Media routes
 Route::post('/media/delete-image', [MediaController::class, 'deleteImage'])->name('delete-image');
 Route::post('/media/upload', [MediaController::class, 'uploadMedia'])->name('upload-media');
+
+Route::post('/ai-chat', [AiChatController::class, 'chat'])->name('ai.chat');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
