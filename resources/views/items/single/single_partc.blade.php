@@ -114,6 +114,107 @@
     <script src="https://js.puter.com/v2/"></script>
 
     <script>
+        const addWordModal = document.getElementById('addWordModal');
+        const addWordForm = document.getElementById('addWordForm');
+        const openAddWordModalButton = document.getElementById('openAddWordModal');
+        const cancelAddWordButton = document.getElementById('cancelAddWord');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const addWordSubmitBtn = document.getElementById('addWordSubmitBtn');
+        const addWordFeedback = document.getElementById('addWordFeedback');
+        const addWordCsrfToken = addWordForm.querySelector('input[name="_token"]')?.value;
+
+        function setAddWordFeedback(message, type = 'info') {
+            const typeClass = {
+                success: 'text-green-600',
+                error: 'text-red-600',
+                info: 'text-blue-600',
+            };
+
+            addWordFeedback.className = `mt-3 text-sm ${typeClass[type] || typeClass.info}`;
+            addWordFeedback.classList.remove('hidden');
+            addWordFeedback.textContent = message;
+        }
+
+        function resetAddWordSubmitState() {
+            addWordSubmitBtn.disabled = false;
+            addWordSubmitBtn.textContent = 'Add Word';
+        }
+
+        function openAddWordModal() {
+            addWordModal.classList.remove('hidden');
+            addWordModal.classList.add('flex');
+            addWordFeedback.classList.add('hidden');
+            addWordFeedback.textContent = '';
+            resetAddWordSubmitState();
+        }
+
+        function closeAddWordModal() {
+            addWordModal.classList.remove('flex');
+            addWordModal.classList.add('hidden');
+        }
+
+        // Add Word modal handlers
+        openAddWordModalButton.addEventListener('click', openAddWordModal);
+        cancelAddWordButton.addEventListener('click', closeAddWordModal);
+        closeModalButton.addEventListener('click', closeAddWordModal);
+
+        addWordModal.addEventListener('click', (e) => {
+            if (e.target === addWordModal) {
+                closeAddWordModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !addWordModal.classList.contains('hidden')) {
+                closeAddWordModal();
+            }
+        });
+
+        // Submit to route('save_word') as JSON and keep user on the same page.
+        addWordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            addWordSubmitBtn.disabled = true;
+            addWordSubmitBtn.textContent = 'Saving...';
+            setAddWordFeedback('Saving word...', 'info');
+
+            const formData = new FormData(addWordForm);
+
+            try {
+                const response = await fetch(addWordForm.action, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': addWordCsrfToken || '',
+                    },
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    const validationError = data?.errors ? Object.values(data.errors).flat()[0] : null;
+                    const errorMessage = validationError || data?.message || 'Failed to save word.';
+                    setAddWordFeedback(errorMessage, 'error');
+                    resetAddWordSubmitState();
+                    return;
+                }
+
+                setAddWordFeedback(data.message || 'Word added successfully!', 'success');
+
+                setTimeout(() => {
+                    addWordForm.reset();
+                    closeAddWordModal();
+                    resetAddWordSubmitState();
+                }, 1000);
+            } catch (error) {
+                console.error('Save word failed:', error);
+                setAddWordFeedback('Something went wrong while saving.', 'error');
+                resetAddWordSubmitState();
+            }
+        });
+
         const form = document.getElementById('chatForm');
         const input = document.getElementById('chatInput');
         const messages = document.getElementById('chatMessages');

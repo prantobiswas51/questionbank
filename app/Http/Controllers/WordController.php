@@ -13,6 +13,7 @@ use App\Models\Summary;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class WordController extends Controller
 {
@@ -217,10 +218,35 @@ class WordController extends Controller
 
     public function save_word(Request $request)
     {
-        $mainWord = $request->input('main_word');
+        $validator = Validator::make($request->all(), [
+            'main_word' => ['required', 'string', 'max:255'],
+            'translate_word' => ['required', 'string', 'max:255'],
+            'notes' => ['nullable', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed.',
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+
+            return redirect()->route('home')->withErrors($validator)->withInput();
+        }
+
+        $mainWord = trim($request->input('main_word'));
 
         // Check if word already exists
         if (Word::where('english_word', $mainWord)->exists()) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This word already exists in the database!',
+                ], 409);
+            }
+
             return redirect()->route('home')->with('error', 'This word already exists in the database!');
         }
 
@@ -241,6 +267,19 @@ class WordController extends Controller
         $word->meaning = $request->input('translate_word');
         $word->notes = $request->input('notes');
         $word->save();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Word added successfully!',
+                'word' => [
+                    'id' => $word->id,
+                    'english_word' => $word->english_word,
+                    'meaning' => $word->meaning,
+                    'notes' => $word->notes,
+                ],
+            ]);
+        }
 
         return redirect()->route('home')->with('success', 'Word added successfully!');
     }
