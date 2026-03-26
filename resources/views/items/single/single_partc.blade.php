@@ -87,7 +87,7 @@
                         rows="3" required></textarea>
 
                     <div class="flex justify-end gap-2">
-                        <select name="model" id="modelSelect">
+                        <select name="model" id="modelSelect" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors border-gray-100">
                             {{-- show puterjs model lists --}}
                             <option value="gpt-5-nano">GPT-5 Nano</option>
                             <option value="gpt-4">GPT-4</option>
@@ -113,67 +113,154 @@
 
     <script src="https://js.puter.com/v2/"></script>
 
-<script>
-const form = document.getElementById('chatForm');
-const input = document.getElementById('chatInput');
-const messages = document.getElementById('chatMessages');
-const clearBtn = document.getElementById('clearBtn');
+    <script>
+        const form = document.getElementById('chatForm');
+        const input = document.getElementById('chatInput');
+        const messages = document.getElementById('chatMessages');
+        const clearBtn = document.getElementById('clearBtn');
+        const modelSelect = document.getElementById('modelSelect');
 
-let chatHistory = []; // holds conversation
+        let chatHistory = [];
 
-form.addEventListener('submit', async function(e) {
-    e.preventDefault();
+        /* =========================
+        LOAD + FILTER MODELS
+        ========================= */
+        async function loadModels() {
+            try {
+                const models = await puter.ai.listModels();
 
-    const message = input.value.trim();
-    if (!message) return;
+                console.log('ALL MODELS:', models); // inspect once
 
-    appendMessage('You', message);
+                modelSelect.innerHTML = '';
 
-    input.value = '';
+                // 🔥 FILTER LOGIC (robust, not naive)
+                const chatModels = models.filter(model => {
+                    // handle different possible structures
+                    return (
+                        model?.type === 'chat' ||
+                        model?.capabilities?.includes?.('chat') ||
+                        model?.id?.toLowerCase().includes('gpt') // fallback heuristic
+                    );
+                });
 
-    // store user message
-    chatHistory.push({ role: "user", content: message });
+                // ❗ fallback if filter fails
+                const finalModels = chatModels.length ? chatModels : models;
 
-    try {
-        // loading indicator
-        const loadingEl = appendMessage('AI', 'Typing...');
+                finalModels.forEach(model => {
+                    const option = document.createElement('option');
 
-        const response = await puter.ai.chat(chatHistory, {
-            model: 'gpt-5-nano'
+                    const value = model.id || model.name || model;
+                    option.value = value;
+                    option.textContent = value;
+
+                    modelSelect.appendChild(option);
+                });
+
+            } catch (err) {
+                console.error('Model load failed:', err);
+            }
+        }
+
+        loadModels();
+
+
+        /* =========================
+        CHAT
+        ========================= */
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const message = input.value.trim();
+            if (!message) return;
+
+            const selectedModel = modelSelect.value;
+
+            appendMessage('You', message);
+            input.value = '';
+
+            chatHistory.push({ role: "user", content: message });
+
+            try {
+                const loadingEl = appendMessage('AI', 'Typing...');
+
+                const response = await puter.ai.chat(chatHistory, {
+                    model: selectedModel
+                });
+
+                const rawReply = response?.message?.content || '';
+                const reply = cleanReply(rawReply) || 'No response';
+
+                loadingEl.querySelector('span').textContent = reply;
+
+                chatHistory.push({ role: "assistant", content: reply });
+
+            } catch (err) {
+                appendMessage('AI', 'Model failed, try another');
+                console.error(err);
+            }
         });
 
-        const reply = response?.message?.content || 'No response';
 
-        // replace loading text
-        loadingEl.querySelector('span').textContent = reply;
+        /* =========================
+        CLEAR
+        ========================= */
+        clearBtn.addEventListener('click', () => {
+            messages.innerHTML = '';
+            chatHistory = [];
+        });
 
-        // store AI reply
-        chatHistory.push({ role: "assistant", content: reply });
 
-    } catch (err) {
-        appendMessage('AI', 'Error getting response');
-        console.error(err);
-    }
-});
+        /* =========================
+        UI
+        ========================= */
+        function appendMessage(sender, text) {
+            const div = document.createElement('div');
+            div.className = "text-sm";
 
-clearBtn.addEventListener('click', () => {
-    messages.innerHTML = '';
-    chatHistory = [];
-});
+            div.innerHTML = `
+                <strong>${sender}:</strong>
+                <span class="text-slate-700">${text}</span>
+            `;
 
-function appendMessage(sender, text) {
-    const div = document.createElement('div');
-    div.className = "text-sm";
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
 
-    div.innerHTML = `
-        <strong>${sender}:</strong>
-        <span class="text-slate-700">${text}</span>
-    `;
+            return div;
+        }
 
-    messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
 
-    return div; // important for updating "Typing..."
-}
-</script>
+        // ============================
+        // post processing for AI responses (optional)
+        // ============================
+        function cleanReply(text) {
+            if (!text) return '';
+
+            return text
+                // remove markdown bullets / symbols
+                .replace(/[\*\-\•]+/g, ' ')
+
+                // remove numbered lists (1. 2. etc)
+                .replace(/\d+\.\s+/g, ' ')
+
+                // remove headings (#, ##, etc)
+                .replace(/#+\s*/g, '')
+
+                // remove extra line breaks
+                .replace(/\n{3,}/g, '\n\n')
+
+                // collapse multiple spaces
+                .replace(/\s{2,}/g, ' ')
+
+                // trim spaces
+                .trim();
+        }
+
+        // Buttons to use Enter key for sending and Shift+Enter for new line
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                form.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
 </x-guest-layout>
