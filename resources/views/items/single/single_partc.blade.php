@@ -47,9 +47,10 @@
         </div>
     </div>
 
-    <div class="max-w-8xl flex mx-auto p-4">
+    <div class="max-w-8xl flex flex-col md:flex-row mx-auto p-4">
 
-        <div class="left min-w-[60%] max-w-[65%]">
+        {{-- question annswer side --}}
+        <div class="left min-w-[60%] md:max-w-[65%] ">
             <h1 class="text-2xl font-bold mb-4">Part C answer</h1>
 
             <div
