@@ -58,6 +58,10 @@
                 <div>
                     <p class="text-xl font-bold text-sky-800 mb-1">{{ $question->id }} . {{ $question->part_c_qs }}</p>
 
+                    <div class="pt-2 text-4xl">
+                        {{ $question->part_c_note ?? '' }}
+                    </div>
+
                     <div class="mt-4">
                         <x-answer-with-tooltips :answer="$question->translated_answer" />
                     </div>
