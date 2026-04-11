@@ -6,9 +6,11 @@
             class="bg-white border rounded-lg shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 ease-in-out">
             <div>
                 <p class="text-xl font-bold text-gray-900 mb-1">{{ $question->id }} . {{ $question->part_b_qs }}</p>
+                
                 <div class="pt-2 text-4xl">
-                    {{ $question->part_c_note ?? '' }}
+                    {!! $question->part_b_note ?? '' !!}
                 </div>
+
                 <div class="mt-4">
                     <x-answer-with-tooltips :answer="$question->translated_answer" />
                 </div>
