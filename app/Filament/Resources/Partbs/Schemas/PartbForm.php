@@ -14,7 +14,7 @@ class PartbForm
         return $schema
             ->components([
                 Select::make('story_id')->options(function () {
-                    return \App\Models\Story::all()->pluck('story_name', 'id');
+                    return \App\Models\Story::all()->orderBy('story_name')->pluck('story_name', 'id');
                 })->label('Story')->required(),
                 TextInput::make('part_b_qs')->label('Part B Question')
                     ->required(),
