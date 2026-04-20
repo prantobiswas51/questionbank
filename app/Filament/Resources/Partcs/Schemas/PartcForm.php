@@ -13,9 +13,13 @@ class PartcForm
     {
         return $schema
             ->components([
-                Select::make('story_id')->options(function () {
-                    return \App\Models\Story::all()->orderBy('story_name')->pluck('story_name', 'id');
-                })->label('Story')->required(),
+                Select::make('story_id')
+                    ->options(function () {
+                        return \App\Models\Story::orderBy('story_name')->pluck('story_name', 'id');
+                    })
+                    ->label('Story')
+                    ->required(),
+
                 TextInput::make('part_c_qs')->label('Part C Question')
                     ->required(),
                 RichEditor::make('part_c_ans')->label('Part C Answer')
